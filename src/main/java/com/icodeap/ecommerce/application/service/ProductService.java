@@ -34,7 +34,6 @@ public class ProductService {
         System.out.println("DESPUÉS DEL REPOSITORY: " + result);
         System.out.println("ID RESULTADO: " + result.getId());
 
-        System.out.println("ID PRODUCT ORIGINAL: " + product.getId());
 
         return result;
     }
