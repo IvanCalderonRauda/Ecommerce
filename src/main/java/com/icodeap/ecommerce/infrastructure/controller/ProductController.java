@@ -2,9 +2,12 @@ package com.icodeap.ecommerce.infrastructure.controller;
 
 import com.icodeap.ecommerce.application.service.ProductService;
 import com.icodeap.ecommerce.domain.Product;
+import com.icodeap.ecommerce.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,17 +26,26 @@ public class ProductController {
         return "/admin/products/create";
     }
      @PostMapping("/save-product")
-    //admin/products/save-product
     public String saveProduct(Product product){
          log.info("Nombre del producto: {}", product);
          productService.saveProduct(product);
         //return "/admin/products/create";
-         return "redirect:/admin";
+         return "redirect:/admin/products/show";
 
      }
      @GetMapping("/show")
-     public String showProduct(){
+     public String showProduct(Model model){
+        User user = new User();
+        user.setId(1);
+        Iterable<Product> products = productService.getProductByUser(user);
+        model.addAttribute("products", products);
+
         return "admin/products/show";
 
+     }
+     @GetMapping("/edit/{id}")
+     public void editProduct(@PathVariable Integer id){
+        Product product= productService.getProductById(id);
+        log.info("Product obtenido: {}", product);
      }
 }

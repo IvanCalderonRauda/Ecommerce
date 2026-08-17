@@ -22,20 +22,41 @@ public class ProductService {
         return productRepository.getProductsByUser(user);
 
     }
-    public Product getProductByUser (Integer id){
+    public Product getProductById (Integer id){
      return productRepository.getProductById(id);
 
     }
-    public void saveProduct(Product product){
-        User user= new User();
-        user.setId(1);
-        product.setDateCreated(LocalDateTime.now());
-        product.setDateUpdate(LocalDateTime.now());
-        product.setUser(user);
-        productRepository.saveProduct(product);
+    public Product saveProduct(Product product){
+        System.out.println("ANTES DEL REPOSITORY: " + product);
 
+        Product result = productRepository.saveProduct(product);
+
+        System.out.println("DESPUÉS DEL REPOSITORY: " + result);
+        System.out.println("ID RESULTADO: " + result.getId());
+
+        System.out.println("ID PRODUCT ORIGINAL: " + product.getId());
+
+        return result;
     }
+       /* if(product.getId()==null){
+            User user = new User();
+            user.setId(1);
+            product.setDateCreated(LocalDateTime.now());
+            product.setDateUpdated(LocalDateTime.now());
+            product.setUser(user);
+        }else{
+            Product productDB= productRepository.getProductById(product.getId());
+            product.setCode(productDB.getCode());
+            product.setUser(productDB.getUser());
+            product.setDateCreated(productDB.getDateCreated());
+            product.setDateUpdated(LocalDateTime.now());
+        }
+        return productRepository.saveProduct(product);
+*/
+
+
     public void deleteProductById(Integer id){
         productRepository.deleteProductById(id);
     }
 }
+

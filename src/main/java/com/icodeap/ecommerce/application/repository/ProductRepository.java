@@ -2,7 +2,9 @@ package com.icodeap.ecommerce.application.repository;
 
 import com.icodeap.ecommerce.domain.Product;
 import com.icodeap.ecommerce.domain.User;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ProductRepository {
 Iterable<Product> getProducts();
     Iterable<Product> getProductsByUser(User user);

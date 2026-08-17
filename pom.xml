@@ -85,11 +85,11 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${version.lombok}</version>
-							<path>
-								<groupId>org.projectlombok </groupId>
+						</path>
+						<path>
+								<groupId>org.projectlombok</groupId>
 								<artifactId>lombok-mapstruct-binding</artifactId>
 								<version>${version.mapstruct-lombok}</version>
-							</path>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
