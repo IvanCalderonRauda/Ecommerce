@@ -3,15 +3,19 @@ package com.icodeap.ecommerce.application.service;
 import com.icodeap.ecommerce.application.repository.ProductRepository;
 import com.icodeap.ecommerce.domain.Product;
 import com.icodeap.ecommerce.domain.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-
+@Slf4j
 public class ProductService {
     private final ProductRepository productRepository;
+    private final UploadFile uploadFile;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, UploadFile uploadFile) {
         this.productRepository = productRepository;
-
+        this.uploadFile = uploadFile;
     }
 
     public Iterable <Product> getProducts(){
@@ -26,34 +30,34 @@ public class ProductService {
      return productRepository.getProductById(id);
 
     }
-    public Product saveProduct(Product product){
-        System.out.println("ANTES DEL REPOSITORY: " + product);
-
-        Product result = productRepository.saveProduct(product);
-
-        System.out.println("DESPUÉS DEL REPOSITORY: " + result);
-        System.out.println("ID RESULTADO: " + result.getId());
-
-
-        return result;
-    }
-       /* if(product.getId()==null){
+    public Product saveProduct(Product product, MultipartFile multipartFile) throws IOException {
+        if(product.getId()==null) {
             User user = new User();
             user.setId(1);
             product.setDateCreated(LocalDateTime.now());
             product.setDateUpdated(LocalDateTime.now());
             product.setUser(user);
-        }else{
-            Product productDB= productRepository.getProductById(product.getId());
+            product.setImage(uploadFile.upload(multipartFile));
+            return productRepository.saveProduct(product);
+        } else {
+            Product productDB = productRepository.getProductById(product.getId());
+        //si no se carga la imagen toma la que se le guardó al registro
+            if(multipartFile.isEmpty()){
+                product.setImage(productDB.getImage());
+            }else{ //guarda la imagen que se le envía actualmente
+                if (!"default.jpg".equals(productDB.getImage())) {
+                    uploadFile.delete(productDB.getImage());
+                }
+                product.setImage(uploadFile.upload(multipartFile));
+            }
             product.setCode(productDB.getCode());
             product.setUser(productDB.getUser());
             product.setDateCreated(productDB.getDateCreated());
             product.setDateUpdated(LocalDateTime.now());
+            return productRepository.saveProduct(product);
+
         }
-        return productRepository.saveProduct(product);
-*/
-
-
+    }
     public void deleteProductById(Integer id){
         productRepository.deleteProductById(id);
     }
